@@ -17,4 +17,10 @@ public interface UserService {
     void update(User user);
 
     User getUserByUsername(String username);
+
+    void createUserWithRoles(User user, String[] selectedRoles);
+
+    void editUserWithRoles(User user, String[] selectedRoles);
+
+    void setUserRoles(User user, String[] selectedRoles);
 }

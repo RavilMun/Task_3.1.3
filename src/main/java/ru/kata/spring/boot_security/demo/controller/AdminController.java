@@ -4,26 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
     private final UserService userService;
-    private final RoleService roleService;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService) {
+    public AdminController(UserService userService) {
         this.userService = userService;
-        this.roleService = roleService;
     }
 
     @GetMapping()
@@ -40,13 +34,8 @@ public class AdminController {
 
 
     @PostMapping()
-    public String create(@ModelAttribute("user") User user, @RequestParam("roles") String[] roles) {
-        Set<Role> userRoles = new HashSet<>();
-        for (String role : roles) {
-            userRoles.add(roleService.getRole(role));
-        }
-        user.setRoles(userRoles);
-        userService.create(user);
+    public String create(@ModelAttribute("user") User user, @RequestParam("roles") String[] selectedRoles) {
+        userService.createUserWithRoles(user, selectedRoles);
         return "redirect:/admin";
     }
 
@@ -58,14 +47,8 @@ public class AdminController {
     }
 
     @PostMapping("/edit")
-    public String editUserSubmit(@ModelAttribute User editedUser, @RequestParam("roles") String[] roles) {
-        Set<Role> userRoles = new HashSet<>();
-        for (String role : roles) {
-            System.out.println(role);
-            userRoles.add(roleService.getRole(role));
-        }
-        editedUser.setRoles(userRoles);
-        userService.update(editedUser);
+    public String editUserSubmit(@ModelAttribute User editedUser, @RequestParam("roles") String[] selectedRoles) {
+        userService.editUserWithRoles(editedUser, selectedRoles);
         return "redirect:/admin";
     }
 
