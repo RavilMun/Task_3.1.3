@@ -32,7 +32,6 @@ public class UserDetailsServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Transactional
     public void setUserRoles(User user, String[] selectedRoles) {
         Set<Role> userRoles = new HashSet<>();
         for (String role : selectedRoles) {
